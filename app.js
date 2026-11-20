@@ -111,6 +111,11 @@
     const ph = e.target.closest("[data-photo]"); if (ph) { e.preventDefault(); openPhoto(PHOTO_BY_F[ph.dataset.photo]); }
   });
 
+  /* ---------- Last-updated stamp ---------- */
+  const updTxt = "Updated " + fmtD(SITE_UPDATED);
+  $$(".js-updated").forEach(el => { el.textContent = updTxt; });
+  $$("time.js-updated-time").forEach(el => el.setAttribute("datetime", SITE_UPDATED));
+
   /* ---------- Hero ---------- */
   const stats = [
     ["~21 mi", "continuous trail from William Street Park south to Anderson Dam"],
