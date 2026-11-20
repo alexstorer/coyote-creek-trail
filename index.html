@@ -33,7 +33,7 @@
       <div class="stats" id="stats"></div>
     </div>
     <div class="hero-strip" aria-label="Trail status, north to south">
-      <div class="strip-head"><span>North · Hwy 237 / Alviso</span><span>South · Anderson Dam</span></div>
+      <div class="strip-head"><span>North · Dixon Landing Rd (Bay Trail continues)</span><span>South · Anderson Dam (trail ends)</span></div>
       <div class="strip" id="strip" role="img" aria-label="Proportional bar of trail reaches colored by status"></div>
       <div class="legend" id="stripLegend"></div>
     </div>
@@ -42,12 +42,13 @@
   <section id="map" class="section">
     <div class="section-head">
       <h2>Map of every reach</h2>
-      <p>Reach lines come from the City of San José's <a href="https://data.sanjoseca.gov/dataset/trail-reach" target="_blank" rel="noopener">Trail Reach GIS dataset</a>. Click a line or a list item for its status, cost and funding.</p>
+      <p>Trail lines come from the City of San José's <a href="https://data.sanjoseca.gov/dataset/trail-reach" target="_blank" rel="noopener">Trail Reach GIS dataset</a>. Click a line or a list item to see its status, cost and funding. Round pins are photos taken at that spot; square pins open the City's plan sheet for that stretch.</p>
     </div>
     <div class="map-wrap">
       <div id="leaflet" aria-label="Interactive map of the Coyote Creek Trail"></div>
       <aside class="map-side">
         <div class="filters" id="mapFilters" role="group" aria-label="Filter by status"></div>
+        <div class="filters layer-filters" id="layerFilters" role="group" aria-label="Map layers"></div>
         <ol class="reach-list" id="reachList"></ol>
       </aside>
     </div>
@@ -56,13 +57,28 @@
   <section id="timeline" class="section">
     <div class="section-head">
       <h2>Timeline, 1990–2035</h2>
-      <p>Plans, grants, construction, the 2017 flood, and the encampment and safety issues that have shaped each stretch of trail. Future milestones are shown dashed.</p>
+      <p>Scroll through 40 events. The map follows along, showing where each one happened and how much trail existed on that date. Future milestones are shown dashed.</p>
     </div>
-    <div class="tl-controls">
-      <div class="filters" id="tlFilters" role="group" aria-label="Filter timeline"></div>
+    <div class="tl-sticky" id="tlSticky">
+      <div class="tl-sticky-row">
+        <div class="tl-now"><span class="tl-now-label">Now viewing</span><span class="tl-now-date" id="tlNowDate">1990</span></div>
+        <div class="filters" id="tlFilters" role="group" aria-label="Filter timeline"></div>
+      </div>
+      <div class="tl-overview" id="tlOverview"><div class="tl-cursor" id="tlCursor"></div></div>
     </div>
-    <div class="tl-overview" id="tlOverview" aria-hidden="true"></div>
-    <ol class="timeline" id="tlList"></ol>
+    <div class="tl-body">
+      <ol class="timeline" id="tlList"></ol>
+      <div class="tl-map-wrap" id="tlMapWrap">
+        <div id="tlMap" aria-label="Map showing the trail as of the selected event"></div>
+        <div class="tl-map-cap"><strong id="tlMapTitle">Trail as of 1990</strong><span id="tlMapSub"></span></div>
+        <div class="tl-map-legend">
+          <span><i class="ln ln-open"></i>Open by this date</span>
+          <span><i class="ln ln-future"></i>Not yet built</span>
+          <span><i class="ln ln-gap"></i>Still a gap today</span>
+          <span><i class="ln ln-hl"></i>This event</span>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section id="costs" class="section">
@@ -115,9 +131,21 @@
   <section id="documents" class="section">
     <div class="section-head">
       <h2>Plans, schematics &amp; official documents</h2>
-      <p>Master plans, engineering drawings, environmental review and Council memos. Many City PDFs are large, and <span class="code">sanjoseca.gov</span> may block downloads that don't come from a regular web browser.</p>
+      <p>Each document is pinned to the stretch of trail it covers. The bar under each title shows its place on the trail from north to south. Hover over or tap a document to see it on the map.</p>
     </div>
-    <div class="doc-grid" id="docGrid"></div>
+    <div class="docs-layout">
+      <div class="doc-map-wrap">
+        <div id="docMap" aria-label="Locator map for documents"></div>
+        <div class="doc-map-cap" id="docMapCap"><strong>Hover over a document</strong><span>to see the stretch of trail it covers</span></div>
+      </div>
+      <div class="docs-col">
+        <h3 class="sub first">Plan sheets &amp; location maps</h3>
+        <p class="muted small">Figures taken from the original Council memos and Ridge Trail maps. Click one to enlarge it.</p>
+        <div class="sch-grid" id="schGrid"></div>
+        <div id="docGrid"></div>
+        <p class="footnote">Several City PDFs are very large, and <span class="code">sanjoseca.gov</span> may block downloads that don't come from a regular web browser.</p>
+      </div>
+    </div>
     <h3 class="sub">Interactive maps &amp; open data</h3>
     <div class="link-grid" id="mapLinks"></div>
   </section>
@@ -137,7 +165,7 @@
   <section id="photos" class="section">
     <div class="section-head">
       <h2>Photographs</h2>
-      <p>Openly licensed images from <a href="https://commons.wikimedia.org/wiki/Category:Coyote_Creek_Trail" target="_blank" rel="noopener">Wikimedia Commons</a>. Click to enlarge; credits are on each image.</p>
+      <p>Openly licensed images from <a href="https://commons.wikimedia.org/wiki/Category:Coyote_Creek_Trail" target="_blank" rel="noopener">Wikimedia Commons</a>, ordered north to south. Each one is pinned on the map at the spot where it was taken. Click a photo to enlarge it, or click the pin icon to jump to it on the map.</p>
     </div>
     <div class="gallery" id="gallery"></div>
   </section>
@@ -173,6 +201,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="data/reaches.js"></script>
 <script src="data/data.js"></script>
+<script src="data/geo.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

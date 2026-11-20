@@ -26,6 +26,7 @@ const SRC = {
 
 // Extra context attached to GIS reaches (keyed by City GIS REACHID).
 const REACH_NOTES = {
+  "COY00": { text: "The trail follows the creek about 2 miles north through Milpitas to Dixon Landing Rd. From there it continues as the San Francisco Bay Trail, up Fremont Blvd and onto gravel levees along the wildlife refuge toward Alviso and Newark.", src: "https://mtc.ca.gov/operations/regional-trails-parks/san-francisco-bay-trail/map-numbers/map-7-alviso-newark" },
   "COY03": { text: "Part of the northern reach designated a National Recreation Trail in 2009." , src: "https://www.nrtapplication.org/trails/coyote-creek-trail" },
   "COY04": { text: "About 1.4 miles of gravel path from the Hwy 237 Bikeway to Montague Expressway, on Valley Water land." },
   "COY05.1": { gap: true, text: "Master planned in 2011 (Montague to Watson Park plan: 4.1 mi, 5 bridges, 10 undercrossings). Part of a $6.876M VTA Measure B design award (2020).", src: SRC.measureB2024 },
@@ -47,14 +48,15 @@ const REACH_NOTES = {
   "COY15A": { text: "Singleton Rd interim bridge (2021): 89-ft span built from salvaged rail flatcars, $1.42M. Also removed a steelhead fish-passage barrier.", src: SRC.sccSingleton },
   "COY16": { text: "Enters Hellyer County Park; Santa Clara County Parks' Coyote Creek Parkway begins." },
   "COY20B": { text: "A parallel alternate alignment in design; not a gap in the through-trail." },
-  "PARKWAY": { text: "Coyote Creek Parkway (County Parks), roughly 15 paved miles in total from Hellyer to Anderson Dam. Part of the Bay Area Ridge Trail since 1990.", src: "https://parks.santaclaracounty.gov/locations/coyote-creek-parkway" },
+  "PARKWAY": { text: "Coyote Creek Parkway (County Parks), roughly 15 paved miles in total from Hellyer to Anderson Dam. The paved trail ends at the base of Anderson Dam in Morgan Hill; parts of Anderson Lake County Park beyond it are closed for the dam retrofit until about 2034. Part of the Bay Area Ridge Trail since 1990.", src: "https://parks.santaclaracounty.gov/locations/coyote-creek-parkway" },
 };
 
 // Mainline order north → south for the strip diagram (parallel alternates & spurs excluded).
 const MAINLINE = ["COY00","COY03","COY04","COY05.1","COY05.2","COY05.3","COY05.4","COY05.5","COY05.6","COY05.7","COY05.8","COY06","COY06-D","COY06.1","COY07","COY07.1","COY08","COY09","COY10","COY11","COY12","COY13","COY14","COY15","COY16","COY17","COY18","COY19A","COY20A","COY21A","COY22A","PARKWAY"];
 
 const LANDMARKS = [
-  { key: true, name: "Hwy 237 Bikeway", ll: [37.4221, -121.9290] },
+  { key: true, name: "Dixon Landing Rd · Bay Trail continues north", ll: [37.4534, -121.9247] },
+  { name: "Hwy 237 Bikeway", ll: [37.4221, -121.9290] },
   { key: true, name: "Montague Expwy", ll: [37.3960, -121.9153], note: "North end of the city gap zone" },
   { name: "Berryessa BART (approx.)", ll: [37.3685, -121.8747] },
   { key: true, name: "Watson Park", ll: [37.3565, -121.8742] },
@@ -65,7 +67,7 @@ const LANDMARKS = [
   { name: "Singleton crossing", ll: [37.2967, -121.8214] },
   { key: true, name: "Hellyer County Park", ll: [37.2841, -121.8135] },
   { name: "Metcalf Rd", ll: [37.2270, -121.7508] },
-  { key: true, name: "Anderson Dam (south terminus)", ll: [37.1654, -121.6471] },
+  { key: true, name: "Anderson Dam · trail ends", ll: [37.1654, -121.6471] },
 ];
 
 // Timeline. cat: plan | build | fund | flood | camp
@@ -237,16 +239,23 @@ const NEWS = [
   ["2026-08-03", "Valley Water", "Valley Water awards construction contract for the Coyote Creek Flood Protection Project", "https://www.valleywater.org/news-events/news-releases/ValleyWaterawardsconstructioncontractfortheCoyoteCreekFloodProtectionProject", "~$124M Phase 2 contract; temporary trail and park closures."],
 ];
 
+// Photos from Wikimedia Commons. ll = camera location from the file's geotag ("approx" = placed by subject).
 const PHOTOS = [
-  { f: "Kluft-photo-2019-06-16-Coyote-Creek-Trail-Tully-trailhead.jpg", c: "Tully Rd trailhead", a: "Ikluft", l: "CC BY-SA 4.0" },
-  { f: "Kluft-photo-2019-06-16-Coyote-Creek-Trail-bridge.jpg", c: "Trail bridge over Coyote Creek", a: "Ikluft", l: "CC BY-SA 4.0" },
-  { f: "Kluft-photo-2019-06-16-Coyote-Creek-Trail-Lakes.jpg", c: "Percolation ponds along the parkway", a: "Ikluft", l: "CC BY-SA 4.0" },
-  { f: "Kluft-photo-2019-06-16-Coyote-Creek-Trail-Bailey-crossing.jpg", c: "Bailey Ave crossing", a: "Ikluft", l: "CC BY-SA 4.0" },
-  { f: "Kluft-photo-2019-06-16-Coyote-Creek-sunset1.jpg", c: "Sunset over Coyote Creek", a: "Ikluft", l: "CC BY-SA 4.0" },
-  { f: "Coyote_Creek_aerial.jpg", c: "Aerial view of Coyote Creek", a: "Dicklyon", l: "CC BY-SA 4.0" },
-  { f: "Coyote_Creek_under_highway_237.jpg", c: "The creek under Highway 237", a: "Dicklyon", l: "CC BY-SA 4.0" },
-  { f: "Miguelita_or_Lower_Silver_Creek_confluence_with_Coyote_Creek.jpg", c: "Lower Silver Creek confluence", a: "Dicklyon", l: "CC BY-SA 4.0" },
-  { f: "Beaver_dam_on_Coyote_Creek_South_Bay_Clean_Creeks_Coalition_2018-11-02.jpg", c: "Beaver dam on Coyote Creek", a: "Schmiebel", l: "CC BY-SA 4.0" },
-  { f: "Kelley_Park_Amphitheater_(4526430241).jpg", c: "Kelley Park amphitheater", a: "HarshLight", l: "CC BY 2.0" },
-  { f: "Early_morning_in_the_park_(19929723120).jpg", c: "Early morning in Kelley Park", a: "bluesbby", l: "CC BY 2.0" },
+  { f: "Kluft-photo-2019-06-16-Coyote-Creek-Trail-Tully-trailhead.jpg", c: "Tully Rd trailhead", a: "Ikluft", l: "CC BY-SA 4.0", ll: [37.311204, -121.842255], y: 2019 },
+  { f: "Coyote_Creek_under_highway_237.jpg", c: "The creek under Highway 237, on the northern reach", a: "Dicklyon", l: "CC BY-SA 4.0", ll: [37.424133, -121.925392], y: 2021 },
+  { f: "Berryessa station from Marbury Road, March 2018.JPG", c: "Berryessa BART under construction, seen from Mabury Rd, next to the northern trail gap", a: "Pi.1415926535", l: "CC BY-SA 3.0", ll: [37.364636, -121.873035], y: 2018 },
+  { f: "Miguelita_or_Lower_Silver_Creek_confluence_with_Coyote_Creek.jpg", c: "Lower Silver Creek meets Coyote Creek near Watson Park", a: "Dicklyon", l: "CC BY-SA 4.0", ll: [37.356322, -121.873914], y: 2020 },
+  { f: "Happy Hollow Park & Zoo -San Jose, California, USA-2Oct2011 (1).jpg", c: "Happy Hollow Park & Zoo entrance, Kelley Park", a: "Don DeBold", l: "CC BY 2.0", ll: [37.325833, -121.861167], y: 2011 },
+  { f: "Kelley_Park_Amphitheater_(4526430241).jpg", c: "Kelley Park amphitheater", a: "HarshLight", l: "CC BY 2.0", ll: [37.323336, -121.86166], y: 2010 },
+  { f: "Japanese Friendship Garden (4526430785).jpg", c: "Japanese Friendship Garden, Kelley Park", a: "HarshLight", l: "CC BY 2.0", ll: [37.322393, -121.861478], y: 2010 },
+  { f: "Early_morning_in_the_park_(19929723120).jpg", c: "Early morning in Kelley Park", a: "bluesbby", l: "CC BY 2.0", ll: [37.3238, -121.8592], approx: true, y: 2015 },
+  { f: "Coyote_Creek_aerial.jpg", c: "Coyote Creek from the air, July 2017 (camera over Capitol Expwy)", a: "Dicklyon", l: "CC BY-SA 4.0", ll: [37.306242, -121.823253], y: 2017 },
+  { f: "Ducks at Cottonwood Lake in Hellyer County Park.jpg", c: "Cottonwood Lake, Hellyer County Park", a: "Itscyp", l: "CC0", ll: [37.279353, -121.811867], y: 2020 },
+  { f: "Kluft-photo-2019-06-16-Coyote-Creek-Trail-Lakes.jpg", c: "Percolation ponds along the parkway near Metcalf Rd", a: "Ikluft", l: "CC BY-SA 4.0", ll: [37.228994, -121.755056], y: 2019 },
+  { f: "Kluft-photo-2019-06-16-Coyote-Creek-Trail-bridge.jpg", c: "Trail bridge over Coyote Creek", a: "Ikluft", l: "CC BY-SA 4.0", ll: [37.226969, -121.751631], y: 2019 },
+  { f: "Coyote cut 1410.JPG", c: "Old Southern Pacific rail cut beside the parkway", a: "Pedro Xing", l: "CC0", ll: [37.226523, -121.751396], y: 2014 },
+  { f: "Kluft-photo-2019-06-16-Coyote-Creek-Trail-Bailey-crossing.jpg", c: "Bailey Ave crossing, Coyote Valley", a: "Ikluft", l: "CC BY-SA 4.0", ll: [37.215358, -121.730767], y: 2019 },
+  { f: "Kluft-photo-2019-06-16-Coyote-Creek-Trail-Bailey-turn.jpg", c: "A bend in the trail near Bailey Ave", a: "Ikluft", l: "CC BY-SA 4.0", ll: [37.213219, -121.727769], y: 2019 },
+  { f: "Kluft-photo-2019-06-16-Coyote-Creek-sunset1.jpg", c: "Sunset over Coyote Creek", a: "Ikluft", l: "CC BY-SA 4.0", ll: [37.205489, -121.717825], y: 2019 },
+  { f: "Beaver_dam_on_Coyote_Creek_South_Bay_Clean_Creeks_Coalition_2018-11-02.jpg", c: "Beaver dam on Coyote Creek (location not recorded)", a: "Schmiebel", l: "CC BY-SA 4.0", ll: null, y: 2018 },
 ];

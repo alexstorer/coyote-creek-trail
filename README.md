@@ -7,16 +7,17 @@ An interactive map, timeline and cost tracker for completing San José's **Coyot
 ## What's inside
 
 - **Map**: every trail reach from the City of San José's Trail Reach GIS layer, colored by status (open, interim, in design, planned gap), with notes on cost and funding.
-- **Timeline**: 40 dated milestones from 1990 to 2035, covering plans, grants, construction, the 2017 flood and encampment clearances. Each one links to its source.
+- **Timeline**: 40 dated milestones from 1990 to 2035, covering plans, grants, construction, the 2017 flood and encampment clearances. Each one links to its source. It reads like a scrolling story: the year strip stays pinned at the top, and a map beside the cards follows along. For each event, the map flies to where it happened and redraws the trail as it stood on that date.
 - **Costs**: total cost and cost per mile for City projects completed 2021–2025, plus a calculator that estimates the cost of closing the remaining ~4.9 miles of gaps.
-- **Documents**: master plans, design plan sets (schematics), CEQA filings and Council memos.
+- **Documents**: master plans, design plan sets, CEQA filings and Council memos. Each one is pinned to the stretch of trail it covers, with a small strip showing where it falls along the trail and a pinned locator map. The section also includes plan sheets and location maps taken from the original Council memos and the Bay Area Ridge Trail maps (`img/schematics/`).
 - **News**: 34 local articles from 2004 to 2026.
-- **Photos**: openly licensed images from Wikimedia Commons.
+- **Photos**: geotagged, openly licensed images from Wikimedia Commons. Each one is pinned on the map and attached to the matching timeline events.
 
 ## Data sources
 
 - Trail geometry: [City of San José Trail Reach dataset](https://data.sanjoseca.gov/dataset/trail-reach) (ArcGIS layer `OPN_OpenDataService/MapServer/538`), retrieved November 2026. The raw download is in `data/source/`. `data/reaches.geojson` and `data/reaches.js` are trimmed copies. The trimming drops the separate Coyote Alamitos Canal reaches and the duplicate on-street alternate alignments.
 - Costs and dates: City Council and committee memos (Legistar), Valley Water releases, State Coastal Conservancy staff reports, and local news. Each one is cited inline in `data/data.js`.
+- Location links: `data/geo.js` connects events, documents and plan sheets to trail sections. It also records the year each section opened. Opening years before 2021 are approximate, and the file marks them that way.
 - Basemap: Esri Canvas tiles with © OpenStreetMap contributors.
 
 ## Caveats
