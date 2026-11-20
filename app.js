@@ -191,19 +191,24 @@
     if (introSel === ch) return; introSel = ch;
     introHalo.clearLayers();
     introTrail.eachLayer(l => l.setStyle(introStyle(l.feature.properties, !!ch && !ch.r.includes(l.feature.properties.id))));
-    $$("#chapters .chapter").forEach(c => c.classList.toggle("active", ch && c.dataset.n === ch.n));
-    if (!ch) { $("#introMapCap").textContent = "Hover over a chapter below to zoom in"; introMap.flyToBounds(allBounds, { ...INTRO_PAD, duration: .7 }); return; }
+    $$("#chapters .chapter").forEach(c => c.classList.toggle("active", !!ch && c.dataset.n === ch.n));
+    const cap = $("#introMapCap");
+    if (!ch) {
+      cap.innerHTML = "<strong>The whole trail</strong><span>Bay Trail to Anderson Dam</span>";
+      introMap.flyToBounds(allBounds, { ...INTRO_PAD, duration: REDUCED_I ? 0 : .8 }); return;
+    }
     L.geoJSON({ type: "FeatureCollection", features: featsFor(ch.r) }, { style: { color: css("--accent"), weight: 16, opacity: .22, lineCap: "round" }, interactive: false }).addTo(introHalo);
-    $("#introMapCap").textContent = `Chapter ${ch.n}: ${ch.t}`;
-    introMap.flyToBounds(boundsFor(ch.r), { padding: [30, 30], duration: .7 });
+    cap.innerHTML = `<strong>Chapter ${ch.n} of 3 · ${esc(ch.t)}</strong><span>${esc(ch.sub)}</span>`;
+    introMap.flyToBounds(boundsFor(ch.r), { padding: [40, 40], duration: REDUCED_I ? 0 : .8 });
   };
+  const REDUCED_I = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const chMiles = ch => {
     const fs = featsFor(ch.r).filter(f => MAINLINE.includes(f.properties.id));
     const sum = pred => [...new Set(fs.filter(f => pred(f.properties)).map(f => f.properties.id))].reduce((s, id) => s + reachMi(id), 0);
     return { open: sum(isOpen), gap: sum(isGap) };
   };
   CHAPTERS.forEach(ch => {
-    const { open, gap } = chMiles(ch), tot = open + gap;
+    const { open, gap } = chMiles(ch);
     const p = PHOTO_BY_F[ch.ph];
     const el = h("article", { class: "chapter", "data-n": ch.n, tabindex: "0" }, `
       <button class="chapter-img" data-photo="${esc(p.f)}" aria-label="Enlarge photo: ${esc(p.c)}"><img loading="lazy" src="${fp(p.f, 900)}" alt="${esc(p.c)}"><span class="chapter-n">${ch.n}</span></button>
@@ -214,12 +219,28 @@
           <span><strong>${open.toFixed(1)} mi</strong> open${gap > 0.05 ? ` · <strong class="gap-t">${gap.toFixed(1)} mi</strong> not built` : " · no gaps"}</span></div>
         <small class="muted">Photo: ${esc(p.c)} · ${esc(p.a)}, ${esc(p.l)}</small>
       </div>`);
-    el.addEventListener("mouseenter", () => introShow(ch));
-    el.addEventListener("focusin", () => introShow(ch));
     el.addEventListener("click", e => { if (!e.target.closest("button")) introShow(ch); });
+    el.addEventListener("focusin", () => introShow(ch));
     $("#chapters").appendChild(el);
   });
-  $("#chapters").addEventListener("mouseleave", () => introShow(null));
+  // Scroll-driven: the chapter crossing the middle of the screen takes over the map.
+  // Above the first chapter the map shows the whole trail.
+  let introTimer;
+  const introPick = () => {
+    const line = innerHeight * 0.5;
+    const cards = $$("#chapters .chapter");
+    let pick = null;
+    for (const c of cards) { const r = c.getBoundingClientRect(); if (r.top < line) pick = c; }
+    const first = cards[0].getBoundingClientRect();
+    if (first.top > line) pick = null;
+    const ch = pick ? CHAPTERS.find(x => x.n === pick.dataset.n) : null;
+    clearTimeout(introTimer);
+    introTimer = setTimeout(() => introShow(ch), 120);
+  };
+  addEventListener("scroll", () => {
+    const r = $("#intro").getBoundingClientRect();
+    if (r.top < innerHeight && r.bottom > 0) introPick();
+  }, { passive: true });
   themeListeners.push(() => { introTrail.eachLayer(l => l.setStyle(introStyle(l.feature.properties, !!introSel && !introSel.r.includes(l.feature.properties.id)))); });
 
   /* ---------- Pull quotes ---------- */
