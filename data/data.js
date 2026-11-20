@@ -323,3 +323,11 @@ const OUTCOMES = {
     ["Budget", "good", "The contract came in about 18% under the engineer's estimate."],
   ],
 };
+
+// Pull quotes, verbatim from the cited articles.
+const QUOTES = [
+  { q: "The Coyote Creek Trail is one of the hidden secrets in this part of the county.", who: "Cesar Fernando Elias", role: "park ranger at Hellyer County Park", src: "Metro Silicon Valley, 2004", u: "https://www.metroactive.com/papers/metro/04.21.04/coyote-0417.html" },
+  { q: "I don't have a car and it's good for exercise.", who: "Angel Alcaraz", role: "longtime East San Jose resident near Little Saigon", src: "San José Spotlight, 2022", u: "https://sanjosespotlight.com/san-jose-extends-coyote-creek-trail-adds-patrol-program/" },
+  { q: "Our coalition sees this as an opportunity to create a continuous chain of parks.", who: "Deb Kramer", role: "executive director, Keep Coyote Creek Beautiful", src: "San José Spotlight, 2023", u: "https://sanjosespotlight.com/coalition-calls-on-san-jose-to-build-park-along-coyote-creek/" },
+  { q: "There's no question that of all the trails in the area, the Coyote Creek Trail is one of the most neglected.", who: "Russell Westbrook", role: "founder of Walk San Jose", src: "Metro Silicon Valley, 2004", u: "https://www.metroactive.com/papers/metro/04.21.04/coyote-0417.html" },
+];

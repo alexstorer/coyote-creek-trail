@@ -208,3 +208,16 @@ const DOC_DATES = {
   "Neighborhood Services & Education Committee memo (Nov 2025)": ["2025-11-24", "printed"],
   "Coastal Conservancy: Singleton Crossing staff report (2021)": ["2021-01-21", "printed"],
 };
+
+// The three "chapters" in the intro, north to south.
+const CHAPTERS = [
+  { n: "1", t: "The missing link", sub: "North San José · Dixon Landing Rd to William St",
+    r: R("COY00", "COY07.1"), ph: "Berryessa station from Marbury Road, March 2018.JPG",
+    x: "From the Bay Trail at Dixon Landing Rd, the path follows the creek to Montague Expressway. South of there it breaks into fragments. A new bridge and freeway undercrossing at Mabury Rd opened in 2025, but most of the route to downtown still exists only in plans." },
+  { n: "2", t: "Finished, finally", sub: "Downtown · William St Park to Yerba Buena",
+    r: R("COY08", "COY15"), ph: "Happy Hollow Park & Zoo -San Jose, California, USA-2Oct2011 (1).jpg",
+    x: "Through Selma Olinder Park, Kelley Park and past Happy Hollow to Tully Rd, the last pieces opened in 2021 and 2025. They followed years of flood repairs, encampment clearings and a private easement that took a decade to negotiate." },
+  { n: "3", t: "The long parkway", sub: "South · Hellyer County Park to Anderson Dam",
+    r: R("COY16", "PARKWAY"), ph: "Kluft-photo-2019-06-16-Coyote-Creek-Trail-bridge.jpg",
+    x: "From Hellyer County Park, Santa Clara County's Coyote Creek Parkway carries the trail about 15 paved miles through Coyote Valley's ponds and oak woodland to the foot of Anderson Dam." },
+];

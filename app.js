@@ -169,6 +169,63 @@
   const allBounds = L.geoJSON(REACHES).getBounds();
   const pinSvg = `<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z"/></svg>`;
 
+  /* ---------- Intro: two-tone map + chapters ---------- */
+  const isGap = p => (p.status === "Planned" || p.status === "Design") && p.id !== "COY20B";
+  const isOpen = p => p.status.startsWith("Open");
+  const introMap = makeMap("introMap", { zoomControl: false, dragging: !L.Browser.mobile, tap: false }, true);
+  const introStyle = (p, dim) => isGap(p)
+    ? { color: css("--planned"), weight: 6, opacity: dim ? .35 : 1, dashArray: "1 9", lineCap: "round" }
+    : isOpen(p) ? { color: css("--open"), weight: 5, opacity: dim ? .3 : 1, dashArray: null, lineCap: "round" }
+    : { opacity: 0 };
+  let introSel = null;
+  const introTrail = L.geoJSON(REACHES, { style: f => introStyle(f.properties, false), interactive: false }).addTo(introMap);
+  const introHalo = L.layerGroup().addTo(introMap);
+  [["Bay Trail", [37.4534, -121.9247], "right"], ["Montague Expwy", [37.396, -121.9153], "right"], ["William St Park", [37.3372, -121.868], "left"],
+   ["Kelley Park", [37.3245, -121.8588], "right"], ["Hellyer County Park", [37.2841, -121.8135], "right"], ["Coyote Valley", [37.218, -121.738], "right"], ["Anderson Dam", [37.1654, -121.6471], "right"]]
+    .forEach(([n, ll, dir]) => L.marker(ll, { icon: L.divIcon({ className: "", html: '<div class="lm-icon"></div>', iconSize: [12, 12], iconAnchor: [6, 6] }), interactive: false })
+      .bindTooltip(n, { permanent: true, direction: dir, className: "lm-label", offset: [dir === "left" ? -6 : 6, 0] }).addTo(introMap));
+  const INTRO_PAD = { paddingTopLeft: [24, 40], paddingBottomRight: [120, 24] };
+  const introFit = () => introMap.fitBounds(allBounds, INTRO_PAD);
+  introFit();
+  const introShow = ch => {
+    if (introSel === ch) return; introSel = ch;
+    introHalo.clearLayers();
+    introTrail.eachLayer(l => l.setStyle(introStyle(l.feature.properties, !!ch && !ch.r.includes(l.feature.properties.id))));
+    $$("#chapters .chapter").forEach(c => c.classList.toggle("active", ch && c.dataset.n === ch.n));
+    if (!ch) { $("#introMapCap").textContent = "Hover over a chapter below to zoom in"; introMap.flyToBounds(allBounds, { ...INTRO_PAD, duration: .7 }); return; }
+    L.geoJSON({ type: "FeatureCollection", features: featsFor(ch.r) }, { style: { color: css("--accent"), weight: 16, opacity: .22, lineCap: "round" }, interactive: false }).addTo(introHalo);
+    $("#introMapCap").textContent = `Chapter ${ch.n}: ${ch.t}`;
+    introMap.flyToBounds(boundsFor(ch.r), { padding: [30, 30], duration: .7 });
+  };
+  const chMiles = ch => {
+    const fs = featsFor(ch.r).filter(f => MAINLINE.includes(f.properties.id));
+    const sum = pred => [...new Set(fs.filter(f => pred(f.properties)).map(f => f.properties.id))].reduce((s, id) => s + reachMi(id), 0);
+    return { open: sum(isOpen), gap: sum(isGap) };
+  };
+  CHAPTERS.forEach(ch => {
+    const { open, gap } = chMiles(ch), tot = open + gap;
+    const p = PHOTO_BY_F[ch.ph];
+    const el = h("article", { class: "chapter", "data-n": ch.n, tabindex: "0" }, `
+      <button class="chapter-img" data-photo="${esc(p.f)}" aria-label="Enlarge photo: ${esc(p.c)}"><img loading="lazy" src="${fp(p.f, 900)}" alt="${esc(p.c)}"><span class="chapter-n">${ch.n}</span></button>
+      <div class="chapter-body">
+        <h3>${esc(ch.t)}</h3><p class="chapter-sub">${esc(ch.sub)}</p>
+        <p>${esc(ch.x)}</p>
+        <div class="chapter-miles"><span class="cm-bar"><span class="cm-open" style="flex:${open}"></span><span class="cm-gap" style="flex:${gap || 0.0001}"></span></span>
+          <span><strong>${open.toFixed(1)} mi</strong> open${gap > 0.05 ? ` · <strong class="gap-t">${gap.toFixed(1)} mi</strong> not built` : " · no gaps"}</span></div>
+        <small class="muted">Photo: ${esc(p.c)} · ${esc(p.a)}, ${esc(p.l)}</small>
+      </div>`);
+    el.addEventListener("mouseenter", () => introShow(ch));
+    el.addEventListener("focusin", () => introShow(ch));
+    el.addEventListener("click", e => { if (!e.target.closest("button")) introShow(ch); });
+    $("#chapters").appendChild(el);
+  });
+  $("#chapters").addEventListener("mouseleave", () => introShow(null));
+  themeListeners.push(() => { introTrail.eachLayer(l => l.setStyle(introStyle(l.feature.properties, !!introSel && !introSel.r.includes(l.feature.properties.id)))); });
+
+  /* ---------- Pull quotes ---------- */
+  $("#quotes").innerHTML = (typeof QUOTES === "undefined" ? [] : QUOTES).map(q =>
+    `<figure class="pq"><blockquote>${esc(q.q)}</blockquote><figcaption><span><strong>${esc(q.who)}</strong>${esc(q.role ? ", " + q.role : "")}</span><a href="${q.u}" ${ext}>${esc(q.src)} ↗</a></figcaption></figure>`).join("");
+
   /* ---------- Main map ---------- */
   const map = makeMap("leaflet");
   const activeStatus = new Set(Object.keys(STATUS));
