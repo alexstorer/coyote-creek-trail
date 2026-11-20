@@ -275,14 +275,19 @@
     $("#layerFilters").appendChild(b);
   });
 
+  const SIDE_KIND = { COY19B: "Parallel route", COY21B: "Parallel route", COY20B: "Alternate alignment", COY13B: "Spur", COY11A: "Spur", COY08A: "Bridge link", "COY15-1": "Ramp", COY15A: "Crossing" };
   function renderReachList() {
     const list = $("#reachList"); list.innerHTML = "";
-    const ids = [...MAINLINE, ...Object.keys(byId).filter(id => !MAINLINE.includes(id) && byId[id][0].properties.mi > 0.1)];
+    // North → south: each side route sits right after the mainline reach it branches from.
+    const extras = Object.keys(byId).filter(id => !MAINLINE.includes(id) && PARENT[id] && byId[id][0].properties.mi > 0.1);
+    const ids = MAINLINE.flatMap(id => [id, ...extras.filter(x => PARENT[x] === id)]);
     ids.forEach(id => {
       const f = (byId[id] || [])[0]; if (!f) return;
       const p = f.properties; if (!activeStatus.has(p.status)) return;
-      const li = h("li", { "data-id": id, tabindex: "0" },
-        `<span class="bar ${STATUS[p.status].cls}"></span><span><span class="nm">${esc(p.name)}</span><span class="st">${STATUS[p.status].label}${p.opened ? " · " + p.opened : ""}</span></span><span class="mi">${reachMi(id).toFixed(2)} mi</span>`);
+      const side = !MAINLINE.includes(id);
+      const kind = side ? (SIDE_KIND[id] || "Side route") + " · " : "";
+      const li = h("li", { "data-id": id, tabindex: "0", class: side ? "side" : "" },
+        `<span class="bar ${STATUS[p.status].cls}"></span><span><span class="nm">${esc(p.name)}</span><span class="st">${kind}${STATUS[p.status].label}${p.opened ? " · " + p.opened : ""}</span></span><span class="mi">${reachMi(id).toFixed(2)} mi</span>`);
       if (id === highlighted) li.classList.add("active");
       li.addEventListener("click", () => focusReach(id));
       li.addEventListener("keydown", e => { if (e.key === "Enter") focusReach(id); });
