@@ -103,11 +103,28 @@
       <div class="table-scroll"><table id="projTable"></table></div>
     </details>
 
+    <div class="card mp-card">
+      <h3>Did they deliver? On time and on budget</h3>
+      <p class="muted" style="margin:8px 0 14px;font-size:.92rem;max-width:760px">For each project, the finish date the City planned when it awarded the contract, compared with when the trail actually opened. Every project since 2021 has been finished, each one a few months late. Final closeout costs are rarely published. The one project with a reported final number, Mabury–Empire, went over budget.</p>
+      <div class="table-scroll"><table id="deliveryTable"></table></div>
+    </div>
+
+    <div class="card mp-card">
+      <div class="mp-head">
+        <div>
+          <h3>The City's own estimate, from 2011</h3>
+          <p class="muted">The 2011 master plan for the northern gap, Montague Expwy to Watson Park, priced each reach in 2010 dollars. The figures cover construction only, with no design, contingency or inflation. The one piece built since then is Mabury–Empire, inside Reach 4. Its construction contract was $7.5M for 0.58 mi, about <strong>2× the plan's per-mile figure</strong> for that reach, and the total project cost came to $13.7M.</p>
+        </div>
+        <button class="mp-thumb" data-sch="mp-costs" aria-label="View the estimate page"><img src="img/schematics/mp-costs_thumb.jpg" alt="Estimate of Costs page from the 2011 master plan"><span>View the original page</span></button>
+      </div>
+      <div class="table-scroll"><table id="mpTable"></table></div>
+    </div>
+
     <div class="card estimator">
       <div class="est-head">
         <div>
           <h3>Estimate the cost of closing the gaps</h3>
-          <p class="muted">The City has never published a cost-to-complete for this trail; its estimate for the whole 67-mile trail network is <strong>$300–400 million, with "no defined funding."</strong> This calculator applies a cost-per-mile assumption to the remaining mainline gaps.</p>
+          <p class="muted">The City hasn't updated its 2011 estimate. Its current figure covers only the whole 67-mile trail network: <strong>$300–400 million, with "no defined funding."</strong> This calculator applies a cost-per-mile assumption, in today's total project dollars, to the remaining mainline gaps.</p>
         </div>
         <div class="est-total"><span class="est-label">Estimated cost</span><span class="est-num" id="estNum">$0M</span><span class="muted" id="estSub"></span></div>
       </div>
@@ -140,7 +157,7 @@
       </div>
       <div class="docs-col">
         <h3 class="sub first">Plan sheets &amp; location maps</h3>
-        <p class="muted small">Figures taken from the original Council memos and Ridge Trail maps. Click one to enlarge it.</p>
+        <p class="muted small">35 figures taken from the City's master plans, construction plan sets, feasibility studies and Council memos, organized north to south. Click one to enlarge it, or hover over it to find it on the map.</p>
         <div class="sch-grid" id="schGrid"></div>
         <div id="docGrid"></div>
         <p class="footnote">Several City PDFs are very large, and <span class="code">sanjoseca.gov</span> may block downloads that don't come from a regular web browser.</p>

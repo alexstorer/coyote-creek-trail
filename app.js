@@ -116,7 +116,7 @@
     ["~21 mi", "continuous trail from William Street Park south to Anderson Dam"],
     [gapMi.toFixed(1) + " mi", "of mainline gaps left in north San José (Montague to William St)"],
     [fmtM(spent), "spent on five City trail projects completed 2021–2025"],
-    [`${fmtM(estimate(lowPM)).replace(".0", "")}–${fmtM(estimate(highPM))}`, "our rough estimate to close the gaps (no official figure exists)"],
+    [`${fmtM(estimate(lowPM)).replace(".0", "")}–${fmtM(estimate(highPM))}`, "our rough estimate to close the gaps in today's dollars (the City's 2011 plan said $25.7M in 2010 dollars)"],
   ];
   $("#stats").innerHTML = stats.map(([n, l]) => `<div class="stat"><span class="stat-num">${n}</span><span class="stat-label">${l}</span></div>`).join("");
 
@@ -128,7 +128,7 @@
     d.style.flex = `${mi} 0 0`;
     d.addEventListener("mousemove", e => showTip(e, `<b>${esc(p.name)}</b>${STATUS[p.status].label} · ${mi.toFixed(2)} mi`));
     d.addEventListener("mouseleave", hideTip);
-    d.addEventListener("click", () => { document.getElementById("map").scrollIntoView(); focusReach(id); });
+    d.addEventListener("click", () => { window.__beginProgScroll && window.__beginProgScroll(); document.getElementById("map").scrollIntoView({ behavior: "smooth" }); focusReach(id); });
     strip.appendChild(d);
   });
   $("#stripLegend").innerHTML = Object.values(STATUS).map(s => `<span><i class="sw ${s.cls}"></i>${s.label}</span>`).join("") +
@@ -175,7 +175,7 @@
   const layerById = {};
   let highlighted = null;
 
-  const schFor = id => SCHEMATICS.filter(s => s.r.length <= 4 && (s.r.includes(id) || s.r.includes(PARENT[id])));
+  const schFor = id => SCHEMATICS.filter(s => s.r.length <= 4 && (s.r.includes(id) || s.r.includes(PARENT[id]))).slice(0, 3);
   const popupHTML = p => {
     const s = STATUS[p.status], note = REACH_NOTES[p.id] || REACH_NOTES[p.id.replace("-D", "")];
     const owner = { PRNS: "City Parks (PRNS)", SCVWD: "Valley Water", SCC: "Santa Clara County Parks", DOT: "City DOT", PRIVATE: "Private land", NEIGHCITY: "City of Milpitas" }[p.owner] || "";
@@ -217,10 +217,17 @@
     m.addTo(photoLayer); photoMarker[p.f] = m;
   });
   const schLayer = L.layerGroup().addTo(map);
-  SCHEMATICS.filter(s => s.r.length <= 4).forEach(s => {
-    const c = boundsFor(s.r).getCenter();
-    L.marker(c, { icon: L.divIcon({ className: "", html: `<div class="sch-pin"><img src="${schImg(s, true)}" alt=""></div>`, iconSize: [32, 40], iconAnchor: [-6, 20] }), riseOnHover: true, title: s.t })
-      .bindPopup(`<div class="pop"><button class="pop-img" data-sch="${s.k}"><img src="${schImg(s, true)}" alt="${esc(s.t)}"></button><h4>${esc(s.t)}</h4><div class="meta">${esc(s.d)}</div><p><a href="${s.src}" ${ext}>Source document ↗</a></p></div>`, { maxWidth: 280 })
+  const pinGroups = {};
+  SCHEMATICS.filter(x => x.r.length <= 4).forEach(x => {
+    const c = boundsFor(x.r).getCenter(), key = x.r.join("|");
+    (pinGroups[key] ||= { c, items: [] }).items.push(x);
+  });
+  Object.values(pinGroups).forEach(({ c, items }) => {
+    const first = items[0];
+    const html = `<div class="sch-pin"><img src="${schImg(first, true)}" alt="">${items.length > 1 ? `<b>${items.length}</b>` : ""}</div>`;
+    L.marker(c, { icon: L.divIcon({ className: "", html, iconSize: [32, 40], iconAnchor: [-6, 20] }), riseOnHover: true, title: items.map(x => x.t).join(" · ") })
+      .bindPopup(`<div class="pop"><h4>${items.length > 1 ? items.length + " plan sheets here" : esc(first.t)}</h4>
+        ${items.map(x => `<button class="pop-sch" data-sch="${x.k}"><img src="${schImg(x, true)}" alt=""><span>${esc(x.t)}<small>${esc(x.d)}</small></span></button>`).join("")}</div>`, { maxWidth: 300, minWidth: 260 })
       .addTo(schLayer);
   });
 
@@ -241,6 +248,7 @@
     if (li) li.scrollIntoView({ block: "nearest" });
   }
   const showPhotoOnMap = f => {
+    window.__beginProgScroll && window.__beginProgScroll();
     document.getElementById("map").scrollIntoView({ behavior: "smooth" });
     const m = photoMarker[f]; if (!m) return;
     if (!map.hasLayer(photoLayer)) photoLayer.addTo(map);
@@ -296,14 +304,15 @@
   const T0 = 1989, T1 = 2036;
   const pctOf = y => (y - T0) / (T1 - T0) * 100;
 
-  Object.entries(CATS).forEach(([k, c]) => {
-    const b = h("button", { class: "chip", "aria-pressed": "true" }, `<span class="dot" style="background:var(${c.color})"></span>${c.label}`);
-    b.addEventListener("click", () => {
-      const on = b.getAttribute("aria-pressed") === "true";
-      b.setAttribute("aria-pressed", String(!on));
-      on ? activeCats.delete(k) : activeCats.add(k);
-      renderTimeline();
-    });
+  // Filter: "All" or a single category. Filtering hides cards in place and keeps the
+  // event you were reading anchored on screen, so the page doesn't jump.
+  let catFilter = "all";
+  const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const chipDefs = [["all", { label: "All events" }], ...Object.entries(CATS)];
+  chipDefs.forEach(([k, c]) => {
+    const b = h("button", { class: "chip", "aria-pressed": String(k === "all"), "data-cat": k },
+      (c.color ? `<span class="dot" style="background:var(${c.color})"></span>` : "") + c.label);
+    b.addEventListener("click", () => setFilter(catFilter === k ? "all" : k));
     $("#tlFilters").appendChild(b);
   });
 
@@ -331,51 +340,117 @@
     let b = ids.length ? boundsFor(ids) : null;
     if (e.g.pt) b = b ? b.extend(e.g.pt) : L.latLng(e.g.pt).toBounds(900);
     if (!b) b = allBounds;
-    tlMap.flyToBounds(b, { padding: [36, 36], maxZoom: 15, duration: 0.9 });
+    const r = $("#tlMapWrap").getBoundingClientRect();
+    const onScreen = r.bottom > 0 && r.top < innerHeight;
+    if (onScreen && !REDUCED) tlMap.flyToBounds(b, { padding: [36, 36], maxZoom: 15, duration: 0.8 });
+    else tlMap.fitBounds(b, { padding: [36, 36], maxZoom: 15, animate: false });
     $("#tlMapTitle").textContent = e.future ? `Expected: ${fmtD(e.d)}` : `Trail as of ${fmtD(e.d)}`;
     const where = ids.length ? extentLabel(ids) : "";
     $("#tlMapSub").textContent = `${openMiles(y).toFixed(1)} mi open${where ? " · " + where : ""}${y < 2021 ? " · early opening years approximate" : ""}`;
-    $("#tlNowDate").textContent = fmtD(e.d);
   }
 
-  let io;
-  function setActive(i, li) {
-    if (curEvent === i) return;
+  // Programmatic scrolls (nav links, year-strip dots, "show on map") must not play the
+  // timeline as they pass through it: ignore cards until the scroll settles, then sync.
+  let progScroll = false, idleT = null;
+  const syncFromViewport = () => {
+    const line = innerHeight * 0.47;
+    const lis = $$("#tlList li").filter(li => !li.hidden);
+    let best = null, bestD = Infinity;
+    for (const li of lis) {
+      const r = li.getBoundingClientRect();
+      const d = r.top <= line && r.bottom >= line ? 0 : Math.min(Math.abs(r.top - line), Math.abs(r.bottom - line));
+      if (d < bestD) { bestD = d; best = li; }
+    }
+    if (best) setActive(+best.dataset.i, true);
+  };
+  const endProgScroll = () => { progScroll = false; syncFromViewport(); };
+  const beginProgScroll = () => { progScroll = true; clearTimeout(idleT); idleT = setTimeout(endProgScroll, 900); };
+  addEventListener("scroll", () => { if (!progScroll) return; clearTimeout(idleT); idleT = setTimeout(endProgScroll, 180); }, { passive: true });
+  window.__beginProgScroll = beginProgScroll;
+  document.addEventListener("click", e => {
+    const a = e.target.closest('a[href^="#"]'); if (!a) return;
+    const id = a.getAttribute("href"), t = id.length > 1 && document.querySelector(id);
+    if (!t) return;
+    e.preventDefault(); beginProgScroll();
+    t.scrollIntoView({ behavior: REDUCED ? "instant" : "smooth", block: "start" });
+    history.replaceState(null, "", id);
+  });
+  let mapTimer = null;
+  const liOf = i => $(`#tlList li[data-i="${i}"]`);
+  function setActive(i, immediate = false) {
+    if (progScroll || curEvent === i) return;
     curEvent = i;
-    $$("#tlList li").forEach(x => x.classList.toggle("active", x === li));
-    $$("#tlOverview .ev").forEach(x => x.classList.toggle("active", +x.dataset.i === i));
-    $("#tlCursor").style.left = pctOf(events[i].yr) + "%";
-    showEventOnMap(events[i]);
+    const e = events[i];
+    $$("#tlList li.active").forEach(x => x.classList.remove("active"));
+    const li = liOf(i); if (li) li.classList.add("active");
+    $$("#tlOverview .ev.active").forEach(x => x.classList.remove("active"));
+    const dot = $(`#tlOverview .ev[data-i="${i}"]`); if (dot) dot.classList.add("active");
+    $("#tlCursor").style.left = pctOf(e.yr) + "%";
+    $("#tlNowDate").textContent = fmtD(e.d);
+    // The map only moves once the reader settles on an event, so scrolling past
+    // the timeline doesn't replay every event.
+    clearTimeout(mapTimer);
+    mapTimer = setTimeout(() => showEventOnMap(e), immediate ? 0 : 280);
   }
-  function renderTimeline() {
+  const visible = e => catFilter === "all" || e.cat === catFilter;
+
+  function setFilter(k) {
+    if (k === catFilter) return;
+    const anchor = curEvent != null ? liOf(curEvent) : null;
+    const anchorTop = anchor ? anchor.getBoundingClientRect().top : null;
+    const sec = $("#timeline").getBoundingClientRect();
+    const reading = sec.top < innerHeight * 0.4 && sec.bottom > innerHeight * 0.6;
+    catFilter = k;
+    $$("#tlFilters .chip").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.cat === k)));
+    events.forEach((e, i) => {
+      liOf(i).hidden = !visible(e);
+      $(`#tlOverview .ev[data-i="${i}"]`).classList.toggle("dim", !visible(e));
+    });
+    // keep the current event if it survives the filter, else the nearest one in time
+    let target = curEvent;
+    if (target == null || !visible(events[target])) {
+      const ref = target == null ? events[0].yr : events[target].yr;
+      target = events.map((e, i) => [Math.abs(e.yr - ref), i]).filter(([, i]) => visible(events[i])).sort((x, y) => x[0] - y[0])[0]?.[1];
+    }
+    if (target == null) return;
+    if (reading && anchorTop != null) {
+      const dy = liOf(target).getBoundingClientRect().top - anchorTop;
+      window.scrollTo({ top: scrollY + dy, behavior: "instant" });
+    }
+    curEvent = null;
+    setActive(target, true);
+  }
+
+  const SC_ICON = { good: "✓", warn: "!", bad: "✕", unk: "?", pend: "◷" };
+  const SC_LABEL = { good: "Yes", warn: "Partly", bad: "No", unk: "Not reported", pend: "In progress" };
+  const scorecardHTML = rows => `<dl class="scorecard">${rows.map(([k, s, v]) =>
+    `<div class="sc-row sc-${s}"><dt><span class="sc-ic" aria-hidden="true">${SC_ICON[s]}</span>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>`;
+  function buildTimeline() {
     const list = $("#tlList"), ov = $("#tlOverview");
-    list.innerHTML = ""; $$("#tlOverview .ev, #tlOverview .tick").forEach(x => x.remove());
     for (let y = 1990; y <= 2035; y += 5) {
       const t = h("span", { class: "tick" }, String(y)); t.style.left = pctOf(y) + "%"; ov.appendChild(t);
     }
-    if (io) io.disconnect();
-    io = new IntersectionObserver(entries => {
+    const io = new IntersectionObserver(entries => {
       const vis = entries.filter(en => en.isIntersecting);
-      if (vis.length) setActive(+vis[0].target.dataset.i, vis[0].target);
+      if (vis.length) setActive(+vis[vis.length - 1].target.dataset.i);
     }, { rootMargin: "-45% 0px -50% 0px" });
     const rows = {};
-    curEvent = null;
     events.forEach((e, i) => {
-      if (!activeCats.has(e.cat)) return;
       const c = CATS[e.cat];
       const li = h("li", { id: "ev" + i, "data-i": i, class: e.future ? "future" : "" });
       li.style.setProperty("--c", `var(${c.color})`);
       const ph = (e.g.ph || []).map(f => PHOTO_BY_F[f]).filter(Boolean);
-      const sch = e.g.sch ? SCH_BY_K[e.g.sch] : null;
+      const schs = [].concat(e.g.sch || []).map(k => SCH_BY_K[k]).filter(Boolean);
       const where = e.g.r ? extentLabel(e.g.r) : (e.g.pt ? "Senter Rd trestle area" : "");
       const media = ph.map(p => `<button class="tl-ph" data-photo="${esc(p.f)}" title="${esc(p.c)}"><img loading="lazy" src="${fp(p.f, 400)}" alt="${esc(p.c)}"><span>${esc(p.c)}<small>${esc(p.a)} · ${esc(p.l)}</small></span></button>`).join("") +
-        (sch ? `<button class="tl-ph tl-sch" data-sch="${sch.k}" title="${esc(sch.t)}"><img loading="lazy" src="${schImg(sch, true)}" alt="${esc(sch.t)}"><span>Plan sheet<small>${esc(sch.d)}</small></span></button>` : "");
+        schs.map(sch => `<button class="tl-ph tl-sch" data-sch="${sch.k}" title="${esc(sch.t)}"><img loading="lazy" src="${schImg(sch, true)}" alt="${esc(sch.t)}"><span>${esc(sch.short || "Plan sheet")}<small>${esc(sch.d)}</small></span></button>`).join("");
       li.innerHTML = `<div class="card tl-card"><div class="tl-date">${fmtD(e.d)}${e.future ? " · expected" : ""}<span class="tl-cat">${c.label}</span></div>
         <h3>${esc(e.t)}</h3><p>${esc(e.x)}</p>
         ${where ? `<div class="tl-where">${pinSvg}${esc(where)}</div>` : ""}
+        ${OUTCOMES[e.d] ? scorecardHTML(OUTCOMES[e.d]) : ""}
         ${media ? `<div class="tl-media">${media}</div>` : ""}
         <div class="srcs">${e.s.map(([n, u]) => `<a href="${u}" ${ext}>${esc(n)}</a>`).join("")}</div></div>`;
-      li.addEventListener("click", ev => { if (!ev.target.closest("a,button")) { curEvent = null; setActive(i, li); } });
+      li.addEventListener("click", ev => { if (!ev.target.closest("a,button")) { curEvent = null; setActive(i, true); } });
       list.appendChild(li); io.observe(li);
       const pct = pctOf(e.yr), bucket = Math.round(pct * 1.4);
       const row = rows[bucket] = (rows[bucket] || 0) + 1;
@@ -385,14 +460,16 @@
       dot.addEventListener("mousemove", ev => showTip(ev, `<b>${esc(e.t)}</b>${fmtD(e.d)}`));
       dot.addEventListener("mouseleave", hideTip);
       dot.addEventListener("click", () => {
+        if (!visible(e)) setFilter("all");
+        beginProgScroll();
         const top = li.getBoundingClientRect().top + scrollY - innerHeight * 0.45 + 20;
-        scrollTo({ top, behavior: "smooth" });
+        window.scrollTo({ top, behavior: REDUCED ? "instant" : "smooth" });
       });
       ov.appendChild(dot);
     });
-    const first = list.querySelector("li"); if (first) setActive(+first.dataset.i, first);
+    setActive(0, true);
   }
-  renderTimeline();
+  buildTimeline();
 
   const syncSticky = () => {
     document.documentElement.style.setProperty("--top-h", $(".topbar").offsetHeight + "px");
@@ -430,9 +507,33 @@
     PROJECTS.map(p => `<tr><td>${esc(p.name)} <span class="muted">${p.id}</span></td><td class="num">${p.year}</td><td class="num">${p.mi ?? "–"}</td><td class="num">${p.contract ? "$" + p.contract.toFixed(2) + "M" : "–"}</td><td class="num">$${p.cost.toFixed(2)}M</td><td class="num">${p.mi ? "$" + perMileOf(p).toFixed(1) + "M" : "–"}</td><td>${esc(p.funding)}</td><td><a href="${p.src}" ${ext}>Memo ↗</a></td></tr>`).join("") +
     `<tr><td><strong>Total</strong></td><td></td><td class="num">${builtProjects.reduce((a, p) => a + p.mi, 0).toFixed(2)}</td><td></td><td class="num"><strong>$${spent.toFixed(2)}M</strong></td><td class="num">$${avgPM.toFixed(1)}M</td><td colspan="2"></td></tr></tbody>`;
 
+  /* ---------- Delivery scorecard ---------- */
+  const DELIVERY = [
+    ["William St → Story Rd", "Oct 2021", "Nov 2021", "warn", "$2.50M", "Not published", "unk", SRC.memoWilliamStory],
+    ["Story Rd → Phelan Ave", "Aug 2021", "Oct 2021", "warn", "$3.45M", "Not published", "unk", SRC.memoStoryPhelan],
+    ["Singleton interim bridge", "2021", "Summer 2021", "good", "$1.42M", "Not published", "unk", SRC.memoSingleton],
+    ["Mabury Rd → Empire St", "End of 2024", "Apr 2025", "warn", "$12.98M", "$13.72M (+5.7%)", "bad", SRC.memoMabury2025],
+    ["Phelan Ave → Tully Rd", "Jan 2025", "May 2025", "warn", "$7.1M est. → $4.49M bid", "Bid 37% under est.; final not published", "good", SRC.memoPhelanTully],
+  ];
+  const pill = (s, txt) => `<span class="sc-pill sc-${s}"><span aria-hidden="true">${{ good: "✓", warn: "!", bad: "✕", unk: "?" }[s]}</span>${esc(txt)}</span>`;
+  $("#deliveryTable").innerHTML = `<thead><tr><th>Project</th><th>Planned finish (at award)</th><th>Actually opened</th><th>Budget at award</th><th>Final</th><th></th></tr></thead><tbody>` +
+    DELIVERY.map(([n, pl, ac, ss, b, f, bs, src]) => `<tr><td><strong>${esc(n)}</strong></td><td>${esc(pl)}</td><td>${pill(ss, ac)}</td><td>${esc(b)}</td><td>${pill(bs, f)}</td><td><a href="${src}" ${ext}>Memo ↗</a></td></tr>`).join("") + `</tbody>`;
+
+  /* ---------- The City's 2011 estimate ---------- */
+  const MP_REACHES = [
+    ["1", "Montague Expwy → O'Toole Ave", 1.13, 5.1, "Bridge at Montague, undercrossing at Charcot"],
+    ["2", "O'Toole Ave → Union Pacific RR", 0.67, 2.8, "Five undercrossings: O'Toole, I-880, Brokaw, Ridder Park, UPRR"],
+    ["3", "Union Pacific RR → Flea Market", 1.03, 8.5, "Bridges at Notting Hill Dr and Oakland Rd"],
+    ["4", "Flea Market → Watson Park", 1.44, 9.3, "Bridges at Penitencia Creek and Hwy 101; undercrossings at Berryessa, Mabury, Hwy 101"],
+  ];
+  const mpMax = Math.max(...MP_REACHES.map(r => r[3]));
+  $("#mpTable").innerHTML = `<thead><tr><th>Reach</th><th class="num">Miles</th><th>Construction estimate (2010 $)</th><th>Major structures</th></tr></thead><tbody>` +
+    MP_REACHES.map(([n, nm, mi, c, x]) => `<tr><td><strong>${n}</strong> · ${esc(nm)}</td><td class="num">${mi.toFixed(2)}</td><td><span class="mp-bar"><span style="width:${c / mpMax * 100}%"></span></span>$${c.toFixed(1)}M</td><td>${esc(x)}</td></tr>`).join("") +
+    `<tr><td><strong>Total</strong></td><td class="num"><strong>4.27</strong></td><td><strong>$25.7M</strong> <span class="muted">≈ $6.0M / mi</span></td><td></td></tr></tbody>`;
+
   /* ---------- Estimator ---------- */
   const slider = $("#perMile");
-  const presets = [["Creek-bank (Phelan–Tully)", lowPM], ["Average of recent projects", avgPM], ["Bridge-heavy (Mabury–Empire)", highPM]];
+  const presets = [["2011 plan, 2010 $, construction only", 25.7 / 4.27], ["Creek-bank (Phelan–Tully)", lowPM], ["Average of recent projects", avgPM], ["Bridge-heavy (Mabury–Empire)", highPM]];
   presets.forEach(([n, v]) => {
     const b = h("button", { class: "chip", "aria-pressed": "false" }, `${n} · $${v.toFixed(1)}M/mi`);
     b.addEventListener("click", () => { slider.value = v.toFixed(1); updateEst(); });
@@ -489,14 +590,20 @@
     el.addEventListener("mouseleave", () => { if (docSel) docShow(docSel.ids, docSel.title); });
   };
 
-  SCHEMATICS.forEach(s => {
-    const card = h("div", { class: "card sch-card" },
-      `<button class="sch-img" data-sch="${s.k}" aria-label="Enlarge ${esc(s.t)}"><img loading="lazy" src="${schImg(s, true)}" alt="${esc(s.t)}"></button>
-       <div class="sch-body"><strong>${esc(s.t)}</strong><span class="muted small">${esc(s.d)}</span>${locatorHTML(s.r)}
-       <span class="sch-actions"><button class="link-btn" data-show>${pinSvg} Show on map</button><a href="${s.src}" ${ext}>Source PDF ↗</a></span></div>`);
-    bindDoc(card, s.r, s.t);
-    card.querySelector("[data-show]").addEventListener("click", () => { docSel = { ids: s.r, title: s.t }; docShow(s.r, s.t); });
-    $("#schGrid").appendChild(card);
+  const SCH_BY = Object.fromEntries(SCHEMATICS.map(x => [x.k, x]));
+  SCH_GROUPS.forEach(([title, keys]) => {
+    $("#schGrid").appendChild(h("h4", { class: "sch-group" }, `${esc(title)} <span class="count">${keys.length}</span>`));
+    const grid = h("div", { class: "sch-row" });
+    keys.map(k => SCH_BY[k]).forEach(s => {
+      const card = h("div", { class: "card sch-card", tabindex: "0" },
+        `<button class="sch-img" data-sch="${s.k}" aria-label="Enlarge ${esc(s.t)}"><img loading="lazy" src="${schImg(s, true)}" alt="${esc(s.t)}"></button>
+         <div class="sch-body"><strong>${esc(s.t)}</strong><span class="muted small">${esc(s.d)}</span>${locatorHTML(s.r)}
+         <span class="sch-actions"><button class="link-btn" data-show>${pinSvg} Show on map</button><a href="${s.src}" ${ext}>Source PDF ↗</a></span></div>`);
+      bindDoc(card, s.r, s.t);
+      card.querySelector("[data-show]").addEventListener("click", () => { docSel = { ids: s.r, title: s.t }; docCur = undefined; docShow(s.r, s.t); });
+      grid.appendChild(card);
+    });
+    $("#schGrid").appendChild(grid);
   });
 
   const pdfIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>`;
@@ -515,7 +622,7 @@
   themeListeners.push(() => {
     restyleAll(); renderReachList(); renderCharts(); renderGapTable();
     docBase.eachLayer(l => l.setStyle(docStyle(l.feature.properties)));
-    if (curEvent != null) { const i = curEvent; curEvent = null; setActive(i, $(`#tlList li[data-i="${i}"]`)); }
+    if (curEvent != null) { const i = curEvent; curEvent = null; setActive(i, true); }
   });
 
   /* ---------- News ---------- */

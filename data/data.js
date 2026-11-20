@@ -76,10 +76,12 @@ const TIMELINE = [
   { d: "2004-03-09", cat: "fund", t: "Council seeks state money to close the gaps", x: "A $140,000 Caltrans environmental-justice grant funds a feasibility study for one continuous paved trail from Alviso to Morgan Hill.", s: [["Metro Silicon Valley", "https://www.metroactive.com/papers/metro/04.21.04/coyote-0417.html"]] },
   { d: "2005-03", cat: "plan", t: "First Coyote Creek Trail Master Plan approved", x: "Covers about 2.5 miles from Los Lagos Golf Course to Phelan Ave. A Mitigated Negative Declaration for the plan was adopted in September 2008.", s: [["CEQAnet SCH 2005012065", "https://ceqanet.lci.ca.gov/2005012065"]] },
   { d: "2007-03-20", cat: "plan", t: "County approves Coyote Creek Parkway master plan", x: "The Board of Supervisors adopts the Parkway Integrated Natural Resources Management Plan and Master Plan.", s: [["Santa Clara County Parks", "https://www.sccgov.org/sites/parks/PlansProjects/Pages/coyote-creek-plan.aspx"]] },
+  { d: "2005-12-22", cat: "plan", t: "Martha St bridge feasibility study", x: "A study for a pedestrian and bicycle bridge linking the Spartan-Keyes neighborhood to the newly built Selma Olinder Park. It compared alternatives estimated at $1.36M–$3.40M (2004–05 dollars).", s: [["Feasibility study (PDF)", SJ_DOC + "20447/636687586989470000"]] },
   { d: "2008", cat: "fund", t: "Federal earmark obligated", x: "A SAFETEA-LU earmark is obligated \"for various Coyote Creek Trails from Highway 237 to Highway 101.\" Its last dollars went to the 2021 William–Story segment.", s: [["Council memo (William–Story)", SRC.memoWilliamStory]] },
   { d: "2009-08-15", cat: "build", t: "Tully Rd segment opens", x: "About 1.2 miles south from Tully Rd opens with a Ridge Trail dedication. The northern reach (Hwy 237–Montague) is designated a National Recreation Trail the same year.", s: [["Bay Area Parks", "https://www.rhorii.com/bayareaparks/CoyoteCreekTrail/CoyCrkTrlNew.html"], ["NRT listing", "https://www.nrtapplication.org/trails/coyote-creek-trail"]] },
-  { d: "2011-09-13", cat: "plan", t: "Council approves Montague-to-Watson Park master plan", x: "A 4.1-mile plan for the northern gap calling for 5 bridges and 10 undercrossings. This reach is still mostly unbuilt in 2026.", s: [["CEQAnet SCH 2011052011", "https://ceqanet.lci.ca.gov/2011052011"]] },
+  { d: "2011-09-13", cat: "plan", t: "Council approves Montague-to-Watson Park master plan", x: "A 4.1-mile plan for the northern gap calling for 5 bridges and 10 undercrossings. The plan estimated construction at $25.7M in 2010 dollars, before design, contingency or inflation. This reach is still mostly unbuilt in 2026.", s: [["CEQAnet SCH 2011052011", "https://ceqanet.lci.ca.gov/2011052011"]] },
   { d: "2012", cat: "plan", t: "City buys the Senter Rd rail trestle", x: "The 250-foot, 1922 trestle over Coyote Creek is acquired for the future Five Wounds Trail connection.", s: [["San José Spotlight", "https://sanjosespotlight.com/san-jose-residents-rally-to-save-railroad-trestle/"]] },
+  { d: "2015-09", cat: "plan", t: "Engineering study for a permanent Singleton bridge", x: "CH2M priced a permanent bridge plus stream restoration at Singleton Rd at $5.4M–$7.9M, depending on the design (2013 cost data, 35% contingency). The City built an interim flatcar bridge in 2021 instead.", s: [["Preliminary Engineering Study (PDF)", SJ_DOC + "20459/636687587018200000"]] },
   { d: "2015-10", cat: "fund", t: "$5.256M state ATP grant for Mabury–Empire", x: "MTC's 2015 Regional Active Transportation Program recommends funding for the bridge and US-101 undercrossing segment, with a $927,600 local match.", s: [["Council memo 2019", SRC.memoMabury2019]] },
   { d: "2016-05", cat: "plan", t: "Trail Strategic Plan: 100 miles by 2022", x: "The plan lists \"Complete Coyote Creek Trail\" as an action item, and admits that at the current pace the network goal \"will not be met until 2035.\"", s: [["Strategic Plan (PDF)", SRC.strategic2016]] },
   { d: "2017-02-21", cat: "flood", t: "Coyote Creek floods", x: "With Anderson Reservoir above capacity, the creek floods Rock Springs and surrounding neighborhoods: about 14,000 evacuated and roughly $73M in damage.", s: [["KQED", "https://www.kqed.org/news/11612712/the-san-jose-flood-what-went-wrong-and-how-the-city-plans-to-fix-it"], ["SPUR", "https://www.spur.org/news/2018-05-31/after-coyote-creek-san-jose-ready-future-floods"]] },
@@ -87,6 +89,7 @@ const TIMELINE = [
   { d: "2017-08-29", cat: "fund", t: "State housing grant pays for trail", x: "A $14.98M Affordable Housing & Sustainable Communities grant (shared with an affordable-housing project on Senter Rd) includes $5.31M for the trail from Story Rd to Tully Rd.", s: [["Council memo (Story–Phelan)", SRC.memoStoryPhelan]] },
   { d: "2019-12-23", cat: "build", t: "Bids rejected for William–Story", x: "All bids are rejected; the segment is re-bid in September 2020.", s: [["Council memo", SRC.memoWilliamStory]] },
   { d: "2020-06", cat: "fund", t: "VTA Measure B: $6.876M for northern design", x: "Design-only funding for Montague–Brokaw, Old Oakland–Berryessa, Empire–Santa Clara and the Singleton crossing. Construction money is not included.", s: [["Council memo Dec 2024", SRC.measureB2024]] },
+  { d: "2020-09-01", cat: "build", t: "Story–Phelan contract: $2.09M", x: "Teichert wins the Kelley Park segment ($3.45M total project). Additional outreach and COVID-19 shelter-in-place orders had already shifted the schedule.", s: [["Council memo", SRC.memoStoryPhelan]] },
   { d: "2021-01-26", cat: "build", t: "William–Story contract awarded", x: "Granite Rock wins at $1.30M (total project $2.50M), including solar lighting under I-280.", s: [["Council memo", SRC.memoWilliamStory]] },
   { d: "2021-03-21", cat: "camp", t: "Encampment removed ahead of construction", x: "An estimated 125–300 people are moved from a nearly mile-long stretch, the largest removal since the 2014 \"Jungle\" sweep.", s: [["NBC Bay Area", "https://www.nbcbayarea.com/news/local/city-of-san-jose-removing-homeless-camp-to-make-way-for-coyote-creek-trail-renovations/2498656/"]] },
   { d: "2021-07", cat: "build", t: "Singleton interim bridge built", x: "An 89-ft span from salvaged rail flatcars replaces a low-water crossing ($1.42M), reopening 17.7 creek miles to steelhead.", s: [["Coastal Conservancy", SRC.sccSingleton], ["Council memo", SRC.memoSingleton]] },
@@ -146,7 +149,7 @@ const DOCS = [
     ["Feasibility Study: Hwy 101 to Story Rd", SJ_DOC + "20445/636687586985570000"],
     ["Feasibility Study: Martha St Pedestrian Bridge", SJ_DOC + "20447/636687586989470000"],
     ["Alignment Plan: Berryessa BART to Santa Clara St BRT", SJ_DOC + "20467/636687592670300000"],
-    ["Preliminary Engineering: Singleton Crossing", SJ_DOC + "20459/636687587018200000"],
+    ["Preliminary Engineering: Singleton Crossing (CH2M, 2015)", SJ_DOC + "20459/636687587018200000"],
     ["San José Trail Program Strategic Plan (2016)", SRC.strategic2016],
   ]},
   { g: "Design plans (schematics)", items: [
@@ -156,14 +159,14 @@ const DOCS = [
     ["100% Plans: Hwy 280 (Selma Olinder) to Story Rd", SJ_DOC + "37689/636809087405070000"],
   ]},
   { g: "Reach maps & fact sheet", items: [
-    ["Overview Map: Section 1", SJ_DOC + "20481/636687592691270000"],
-    ["Overview Map: Section 2", SJ_DOC + "20483/636687592694070000"],
-    ["Overview Map: Section 3", SJ_DOC + "20485/636687592697500000"],
+    ["Overview Map: Section 1 (historic Coyote Creek Park plan)", SJ_DOC + "20481/636687592691270000"],
+    ["Overview Map: Section 2 (historic Coyote Creek Park plan)", SJ_DOC + "20483/636687592694070000"],
+    ["Overview Map: Section 3 (historic Coyote Creek Park plan)", SJ_DOC + "20485/636687592697500000"],
     ["Reach map: William St to Phelan Ave", SJ_DOC + "85452/637872622937800000"],
     ["Reach map: Hwy 237 Bikeway to Montague", SJ_DOC + "20495/636687595949370000"],
     ["Reach map: Tully Rd to Yerba Buena", SJ_DOC + "20469/636687592672800000"],
     ["Reach map: Yerba Buena to County", SJ_DOC + "20471/636687592675470000"],
-    ["Coyote Creek Trail Fact Sheet", SJ_DOC + "20497/636687596865630000"],
+    ["Coyote Creek Trail Fact Sheet (Berryessa Rd–Mercado Way)", SJ_DOC + "20497/636687596865630000"],
     ["County Parks: Coyote Creek Parkway guide map (PDF)", "https://files.santaclaracounty.gov/exjcpb1516/2024-11/coyote-creek-parkway-guide-map.pdf"],
     ["Bay Area Ridge Trail map: Parkway North (2025)", "https://ridgetrail.org/wp-content/uploads/2017/07/Santa-Clara_Coyote-Creek-Parkway-North_2025.pdf"],
   ]},
@@ -259,3 +262,64 @@ const PHOTOS = [
   { f: "Kluft-photo-2019-06-16-Coyote-Creek-sunset1.jpg", c: "Sunset over Coyote Creek", a: "Ikluft", l: "CC BY-SA 4.0", ll: [37.205489, -121.717825], y: 2019 },
   { f: "Beaver_dam_on_Coyote_Creek_South_Bay_Clean_Creeks_Coalition_2018-11-02.jpg", c: "Beaver dam on Coyote Creek (location not recorded)", a: "Schmiebel", l: "CC BY-SA 4.0", ll: null, y: 2018 },
 ];
+
+// Scorecards: did it get done, on time, on budget? Keyed by TIMELINE date.
+// s: good | warn | bad | unk (not reported) | pend (still in progress)
+const OUTCOMES = {
+  "2004-03-09": [
+    ["Promise", "warn", "Improvements were promised \"by spring 2005\". The Kelley Park section opened in Nov 2021, 16 years later."],
+  ],
+  "2011-09-13": [
+    ["Completed", "bad", "Mostly not built. 15 years later, about 4.9 miles of gaps remain between Montague and William St."],
+    ["Budget", "unk", "Estimated at $25.7M (2010 dollars, construction only). No updated estimate has been published."],
+  ],
+  "2016-05": [
+    ["Goal", "bad", "Missed. The network had 67 of the 100 targeted miles in 2026, four years after the 2022 deadline."],
+  ],
+  "2005-12-22": [
+    ["Completed", "unk", "No Martha St bridge appears in the City's trail GIS."],
+  ],
+  "2015-09": [
+    ["Completed", "bad", "The permanent bridge was not built. A $1.42M interim bridge went in instead in 2021, and the permanent crossing waits \"as resources allow.\""],
+  ],
+  "2020-06": [
+    ["Progress", "warn", "As of Nov 2025, design had started on only one piece (Watson Park–Julian St), and the City's matching funds were \"still pending.\""],
+  ],
+  "2020-09-01": [
+    ["Completed", "good", "Yes: completed Oct 2021, with the grand opening on Nov 7, 2021."],
+    ["Schedule", "warn", "About 2 months late. The award memo planned construction for Oct 2020 to Aug 2021."],
+    ["Budget", "unk", "\"Within budget\" at award ($2.09M contract, $3.45M total). The final cost has not been published."],
+  ],
+  "2021-01-26": [
+    ["Completed", "good", "Yes: opened Nov 7, 2021."],
+    ["Schedule", "warn", "About 1 month late against the Apr–Oct 2021 plan, and about 15 months behind the original 2019 bid, whose bids were all rejected."],
+    ["Budget", "unk", "$1.30M contract plus 10% contingency ($2.50M total). The final cost has not been published."],
+  ],
+  "2021-03-21": [
+    ["Promise", "warn", "Work was to be \"fully done by fall 2022\". The last piece (Phelan–Tully) opened in May 2025, about 2½ years later."],
+  ],
+  "2021-07": [
+    ["Completed", "good", "Yes: built summer 2021."],
+    ["Budget", "unk", "The City added $1.4M to match the construction estimate (May 2021). The final cost has not been published."],
+  ],
+  "2023-04-19": [
+    ["Completed", "good", "Yes: opened Apr 2025, with the ribbon cutting on Dec 12, 2025."],
+    ["Schedule", "warn", "About 4 months late. The 2023 award planned completion by the end of 2024, and the project was suspended over a Watson Park mitigation conflict. Construction had originally been funded in 2015."],
+    ["Budget", "bad", "Over budget. The budget rose from $12.98M to $13.72M (+5.7%), and the contingency rose from 10% to 26% (+$1.16M)."],
+  ],
+  "2023-06": [
+    ["Estimate", "unk", "The City warned of a 1–3 year closure. The stretch under the trestle reopened in Sept 2023."],
+  ],
+  "2023-11-07": [
+    ["Completed", "good", "Yes: opened May 2025, with the ribbon cutting on Dec 12, 2025."],
+    ["Schedule", "warn", "About 4 months late against the Jan 2025 plan. The private easement alone took about 10 years to negotiate."],
+    ["Budget", "good", "The winning bid was $4.49M, 37% under the $7.1M engineer's estimate. The final cost has not been published."],
+  ],
+  "2025-08": [
+    ["Progress", "pend", "35% design was due in summer 2026. No completion has been reported yet."],
+  ],
+  "2026-08-03": [
+    ["Progress", "pend", "Under construction. Due to finish in Oct 2028."],
+    ["Budget", "good", "The contract came in about 18% under the engineer's estimate."],
+  ],
+};

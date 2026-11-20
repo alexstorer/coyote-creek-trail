@@ -1,5 +1,6 @@
 :root {
   color-scheme: light;
+  --good: #1e7d46; --warn: #a35f00; --bad: #c0392b;
   --bg: #f6f5f1;
   --surface: #fcfcfb;
   --surface-2: #efeee9;
@@ -34,7 +35,7 @@
   --bg: #121211; --surface: #1a1a19; --surface-2: #232321; --line: #33332f;
   --text: #f4f3ee; --text-2: #c3c2b7; --muted: #95948b;
   --accent: #5fc7a3; --accent-soft: #1d3a31;
-  --open: #3987e5; --interim: #3987e5; --design: #199e70; --planned: #d95926; --flood: #9085e9;
+  --open: #3987e5; --interim: #3987e5; --design: #199e70; --planned: #d95926; --flood: #9085e9; --good: #4cc27f; --warn: #f0a63a; --bad: #f07466;
   --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 24px rgba(0,0,0,.3);
   --hero-grad: linear-gradient(160deg, #0b3d32 0%, #0f3440 55%, #15263a 100%);
 }
@@ -361,3 +362,44 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
 .tooltip b { display: block; }
 
 #tlMap .leaflet-control-attribution, #docMap .leaflet-control-attribution { font-size: 10px; line-height: 1.4; }
+.tl-overview .ev.dim { opacity: .16; }
+.tl-overview .ev.dim.active { opacity: 1; }
+.timeline li[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* Plan-sheet atlas */
+.sch-group { margin: 14px 0 0; font-size: .82rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-2); display: flex; gap: 8px; align-items: baseline; }
+.sch-group .count { color: var(--muted); font-weight: 500; letter-spacing: 0; }
+#schGrid { display: flex; flex-direction: column; gap: 10px; }
+.sch-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.sch-img { height: 130px; }
+.sch-pin { position: relative; }
+.sch-pin b { position: absolute; right: -2px; bottom: -2px; min-width: 16px; height: 16px; padding: 0 3px; border-radius: 8px; background: var(--text); color: var(--bg); font: 700 10px/16px Inter, sans-serif; text-align: center; }
+.sch-pin { overflow: visible; }
+.sch-pin img { border-radius: 3px; }
+.leaflet-popup-content .pop-sch + .pop-sch { margin-top: 6px; }
+/* 2011 estimate */
+.mp-card { margin-top: 20px; padding: 24px; }
+.mp-head { display: grid; grid-template-columns: 1fr 180px; gap: 24px; align-items: start; margin-bottom: 14px; }
+.mp-head p { margin: 8px 0 0; font-size: .92rem; max-width: 700px; }
+.mp-thumb { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; padding: 0; background: #fff; cursor: zoom-in; position: relative; height: 150px; }
+.mp-thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.mp-thumb span { position: absolute; inset: auto 0 0 0; padding: 14px 8px 6px; font: 600 .72rem Inter, sans-serif; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.7)); }
+.mp-bar { display: inline-block; width: 90px; height: 8px; border-radius: 0 4px 4px 0; background: var(--surface-2); margin-right: 8px; vertical-align: middle; overflow: hidden; }
+.mp-bar span { display: block; height: 100%; background: var(--open); border-radius: 0 4px 4px 0; }
+@media (max-width: 700px) { .mp-head { grid-template-columns: 1fr; } .mp-thumb { height: 120px; } }
+
+/* Scorecards */
+.scorecard { margin: 12px 0 0; display: grid; gap: 6px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); }
+.sc-row { display: grid; grid-template-columns: 112px 1fr; gap: 10px; align-items: baseline; font-size: .84rem; }
+.sc-row dt { display: flex; align-items: center; gap: 7px; font-weight: 600; color: var(--text); }
+.sc-row dd { margin: 0; color: var(--text-2); }
+.sc-ic { width: 18px; height: 18px; border-radius: 50%; display: inline-grid; place-items: center; font-size: .72rem; font-weight: 700; color: #fff; flex: none; background: var(--muted); }
+.sc-good .sc-ic { background: var(--good); } .sc-warn .sc-ic { background: var(--warn); } .sc-bad .sc-ic { background: var(--bad); }
+.sc-pend .sc-ic { background: var(--open); }
+.sc-pill { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; white-space: nowrap; }
+.sc-pill > span { width: 17px; height: 17px; border-radius: 50%; display: inline-grid; place-items: center; font-size: .68rem; color: #fff; background: var(--muted); }
+.sc-pill.sc-good > span { background: var(--good); } .sc-pill.sc-warn > span { background: var(--warn); } .sc-pill.sc-bad > span { background: var(--bad); }
+.sc-pill.sc-unk { color: var(--muted); font-weight: 500; }
+#deliveryTable { min-width: 760px; }
+@media (max-width: 520px) { .sc-row { grid-template-columns: 1fr; gap: 2px; } }
