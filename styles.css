@@ -403,3 +403,9 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
 .sc-pill.sc-unk { color: var(--muted); font-weight: 500; }
 #deliveryTable { min-width: 760px; }
 @media (max-width: 520px) { .sc-row { grid-template-columns: 1fr; gap: 2px; } }
+
+.doc-title { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.doc-date { flex: none; font-size: .74rem; font-weight: 600; color: var(--text-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.doc-date-file { color: var(--text-2); font-weight: 500; }
+.doc-date-undated { color: var(--warn); }
+.doc-date-unverified { color: var(--muted); font-weight: 500; font-style: italic; }

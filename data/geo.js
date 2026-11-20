@@ -124,7 +124,7 @@ const EVENT_GEO = {
 const DOC_GEO = {
   "Coyote Creek Trail Master Plan (low-res, ~6 MB)": CITY,
   "Coyote Creek Trail Master Plan (hi-res, ~32 MB)": CITY,
-  "Master Plan: Montague Expwy to Hwy 101": R("COY05.1", "COY05.8"),
+  "Master Plan: Montague Expwy to Watson Park": R("COY05.1", "COY06.1"),
   "Master Plan: Hwy 101 to Story Rd": R("COY06", "COY10"),
   "Master Plan: Phelan Ave to Tully Rd": ["COY12"],
   "Master Plan: through Orchard Park": ["COY05.3", "COY05.4"],
@@ -169,4 +169,42 @@ const REACH_ENDS = {
   COY00: ["Dixon Landing Rd", "Hwy 237"], PARKWAY: ["Metcalf Rd", "Anderson Dam"], COY19B: ["Broderick Dr", "Silver Creek Valley Rd"],
   "COY15A": ["Singleton crossing", "Singleton crossing"], "COY06": ["Hwy 101", "Watson Park"], "COY06-D": ["Watson Park", "Julian St"],
   "COY06.1": ["Watson Park", "Watson Park bridge"], "COY07.2": ["Selma Olinder", "bridge"],
+};
+
+// Document dates. src: "printed" = on the title page / memo header; "filed" = CEQA filing
+// (from the State Clearinghouse number); "file" = PDF creation date (no date printed);
+// "unverified" = not yet checked against the document itself.
+const DOC_DATES = {
+  "Master Plan: Montague Expwy to Watson Park": ["2011-09", "printed"],
+  "Feasibility Study: Martha St Pedestrian Bridge": ["2005-12-22", "printed"],
+  "Alignment Plan: Berryessa BART to Santa Clara St BRT": ["2015-05", "file"],
+  "Preliminary Engineering: Singleton Crossing (CH2M, 2015)": ["2015-09", "printed"],
+  "San José Trail Program Strategic Plan (2016)": ["2016-05", "printed"],
+  "90% Plans: Story Rd to Phelan Ave (38 MB)": ["2014-12", "printed"],
+  "95% Plans: Brokaw Rd to UPRR (18 MB)": ["2017-09", "printed"],
+  "100% Plans: Hwy 280 (Selma Olinder) to Story Rd": ["2018-05-02", "printed"],
+  "Overview Map: Section 1 (historic Coyote Creek Park plan)": ["undated", "undated"],
+  "Overview Map: Section 2 (historic Coyote Creek Park plan)": ["undated", "undated"],
+  "Overview Map: Section 3 (historic Coyote Creek Park plan)": ["undated", "undated"],
+  "Reach map: William St to Phelan Ave": ["2022-04-29", "file"],
+  "Reach map: Hwy 237 Bikeway to Montague": ["2017-01", "file"],
+  "Reach map: Tully Rd to Yerba Buena": ["2009-07", "file"],
+  "Reach map: Yerba Buena to County": ["2010-10", "printed"],
+  "Coyote Creek Trail Fact Sheet (Berryessa Rd–Mercado Way)": ["2015-07", "file"],
+  "County Parks: Coyote Creek Parkway guide map (PDF)": ["2026-06-16", "printed"],
+  "Bay Area Ridge Trail map: Parkway North (2025)": ["2025", "printed"],
+  "CEQA: Coyote Creek Trail Master Plan (2005)": ["2005-01", "filed"],
+  "CEQA: Master Plan Public Project PP09-218 (2011)": ["2011-05", "filed"],
+  "CEQA: Story Rd to Phelan Ave (2014)": ["2014-10", "filed"],
+  "CEQA: Valley Water Flood Protection Project (2023)": ["2023-11", "filed"],
+  "Mabury–Empire rebid & contingency (Feb 2025)": ["2025-02-10", "printed"],
+  "Mabury–Empire contract award (2023)": ["2023-02-13", "printed"],
+  "Phelan–Tully contract award (Nov 2023)": ["2023-10-16", "printed"],
+  "Story–Phelan contract award (2020)": ["2020-08-20", "printed"],
+  "William–Story contract award (2021)": ["2021-01-11", "printed"],
+  "Singleton crossing (May 2021)": ["2021-05-14", "printed"],
+  "Bike Plan & Trail Network Annual Update (2024)": ["2024-03-18", "printed"],
+  "Trail Network Annual Report (2026)": ["2026-03-23", "printed"],
+  "Neighborhood Services & Education Committee memo (Nov 2025)": ["2025-11-24", "printed"],
+  "Coastal Conservancy: Singleton Crossing staff report (2021)": ["2021-01-21", "printed"],
 };

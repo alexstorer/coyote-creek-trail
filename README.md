@@ -26,6 +26,14 @@ An interactive map, timeline and cost tracker for completing San José's **Coyot
 - The gap-closure cost is an extrapolation from recent per-mile costs. It is **not** an official City estimate. The City's only published figure covers the whole trail network: $300–400M, unfunded.
 - Reach lengths and opening dates sometimes differ between sources. Where they do, this site uses the City GIS values.
 
+## Deploying
+
+`index.html` loads its CSS and JS with `?v=` version stamps, so browsers pick up new files right after a deploy. Bump the stamp whenever those files change:
+
+```
+python3 -c "import re,time;p='index.html';s=open(p).read();open(p,'w').write(re.sub(r'\?v=\d+','?v='+time.strftime('%Y%m%d%H%M'),s))"
+```
+
 ## Running locally
 
 This is a static site with no build step. To view it locally:

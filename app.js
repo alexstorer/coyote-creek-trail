@@ -607,16 +607,26 @@
   });
 
   const pdfIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>`;
+  const DATE_NOTE = { printed: "Date printed on the document", filed: "Date the environmental document was filed with the State Clearinghouse", file: "No date is printed; this is the PDF's creation date", undated: "The document carries no date; the City posted this scan in 2016", unverified: "Not yet checked against the document" };
+  const docDate = t => DOC_DATES[t] || ["", "unverified"];
+  const dateChip = t => {
+    const [dt, src] = docDate(t);
+    const label = src === "undated" ? "Undated" : src === "unverified" ? "Date not verified" : fmtD(dt) + (src === "file" ? "*" : "");
+    return `<span class="doc-date doc-date-${src}" title="${esc(DATE_NOTE[src])}">${esc(label)}</span>`;
+  };
+  const sortKey = t => { const [dt, src] = docDate(t); return src === "undated" ? "0000" : src === "unverified" ? "9999" : dt; };
   DOCS.forEach(g => {
     const grp = h("div", { class: "card doc-group" }, `<h3>${esc(g.g)} <span class="count">${g.items.length}</span></h3><ul></ul>`);
-    g.items.forEach(([t, u]) => {
+    g.items.slice().sort((x, y) => sortKey(x[0]).localeCompare(sortKey(y[0]))).forEach(([t, u]) => {
       const ids = DOC_GEO[t] === undefined ? null : DOC_GEO[t];
-      const li = h("li", {}, `<a href="${u}" ${ext}>${pdfIcon}<span class="doc-t"><span>${esc(t)}</span>${locatorHTML(ids)}</span></a>`);
-      bindDoc(li, ids, t);
+      const li = h("li", {}, `<a href="${u}" ${ext}>${pdfIcon}<span class="doc-t"><span class="doc-title"><span>${esc(t)}</span>${dateChip(t)}</span>${locatorHTML(ids)}</span></a>`);
+      const [dt, src] = docDate(t);
+      bindDoc(li, ids, t + (src === "printed" || src === "filed" || src === "file" ? " · " + fmtD(dt) : ""));
       grp.querySelector("ul").appendChild(li);
     });
     $("#docGrid").appendChild(grp);
   });
+  $("#docGrid").insertAdjacentHTML("beforeend", `<p class="footnote">Each group is sorted by date. * marks documents with no printed date, which show the PDF's creation date instead. Hover over a date to see where it comes from. "Date not verified" means the PDF couldn't be retrieved to check.</p>`);
   $("#mapLinks").innerHTML = MAPS.map(m => `<a class="card link-card" href="${m.u}" ${ext}><span class="tag">${esc(m.tag)}</span><strong>${esc(m.t)}</strong><span class="d">${esc(m.d)}</span></a>`).join("");
 
   themeListeners.push(() => {
